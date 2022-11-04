@@ -6,11 +6,12 @@ from time import sleep
 from random import uniform
 
 # Create an instance of ModbusServer
-server = ModbusServer("192.168.0.15", 12345, no_block=True)
+
 
 
 try:    
     print("Start server...")
+    server = ModbusServer('localhost', 12345, no_block=True)
     server.start()
     print("Server is online")
     state = [0]
@@ -18,7 +19,7 @@ try:
         #DataBank.set_words(0, [int(uniform(0, 100))])
         if state != server.data_bank.get_holding_registers(0,15):
             state = server.data_bank.get_holding_registers(0,15)
-            print("Value of Registers has changed to " +str(state))
+            print("Value of Registers has changed to " + str(state))
         sleep(0.5)
 
 except:

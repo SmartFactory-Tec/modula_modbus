@@ -4,18 +4,22 @@ import numpy as np
 import time
 import requests
 
-prod_req_uri = '/modula/product_request' #direccion para solicitar el producto
+input_req_uri = '/modula/input_request' #direccion para ingresar productos
+output_req_uri = '/modula/output_request' #direccion para sacar productos
 tray_stat_uri = '/modula/tray_status'    #direccion por la cual se recibira el estado de bandeja
 req_confirm_uri = '/modula/request_confirmation' #direccion por la cual se le avisara a modula que ya se completo la recogida del produto
 
-hostname = 'http://10.22.128.137:8069' 
+hostname = 'http://localhost:8069' 
 
 producto = {'params': {'code': 'llavero','qty':10}} # codigo del producto y cantiadad
 
 confirm = {'Entregado': 'test'}
 
+user = "a00227526@tec.mx"
+password = "12345"
 
-myhost = "192.168.0.15"
+
+myhost = 'localhost'
 myport = 12345
 c = ModbusClient(host=myhost,port=myport)
 
@@ -27,36 +31,44 @@ class Registros:
         self.informacion=[0,0,0]
 
     def pedido(self, item):
-        res = requests.post(hostname + prod_req_uri, json = item)
-        body = res.json()['result']
-        Registros.informacion[0] = body
+        res = requests.post(hostname + output_req_uri, json = item, auth =(user, password))
+        #body = res.json()['result']
+        #Registros.informacion[0] = body
+        if item == 'hamburguesa':
+            self.informacion[0] = 10
+            self.send_info()
 
     def status(self):
         res = requests.get(hostname + tray_stat_uri, json={})
         body = res.json()['result']
-        Registros.informacion[1] = body
+        self.informacion[1] = body
 
-    def confirmacion_pedido(self,):
+    def confirmacion_pedido(self):
         res = requests.post(hostname + req_confirm_uri, json = confirm)
         body = res.json()['result']
-        Registros.informacion[2] = body
+        self.informacion[2] = body
         
-    """
+    
     def send_info(self):
 
         if c.open():
                     
             bits = c.read_holding_registers(0, 3)
-            Registros.informacion[1]=bits[1]
+            
+            self.informacion[1]=bits[1]
+            print( self.informacion[0])
 
 
-            c.write_multiple_registers(0,[Registros.informacion[1]])
+            c.write_multiple_registers(0,[self.informacion[0],self.informacion[1]])
             time.sleep(1)
 
         else:
             print("unable to connect to "+myhost+":"+str(myport))
-    """
+    
+pedido1 = Registros()
+pedido1.pedido('hamburguesa')
 
 
 
-        # archivo de configuraccion y diccionarios
+#   query parameters, basic auth 
+        # archivo de configuraccion TOML y diccionarios
