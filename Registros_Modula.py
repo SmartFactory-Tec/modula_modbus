@@ -15,8 +15,8 @@ producto = {'params': {'code': 'llavero','qty':10}} # codigo del producto y cant
 
 confirm = {'Entregado': 'test'}
 
-user = "a00227526@tec.mx"
-password = "12345"
+user = "A00227526@itesm.mx"
+password = "12345678"
 
 
 myhost = 'localhost'
@@ -31,16 +31,20 @@ class Registros:
         self.informacion=[0,0,0]
 
     def pedido(self, item): 
-        res = requests.post(hostname + output_req_uri, json = item, auth =(user, password))
+        res = requests.post(hostname + input_req_uri, params = {"code":"fix","qty":"1"}, auth =(user, password))
+        print(res.text)
         #body = res.json()['result']
         #Registros.informacion[0] = body
-        if item == 'fixture':
+        if item == 'fix':
             self.informacion[0] = 10
             self.send_info()
 
     def status(self): # 1 indica que la bandeja esta en proceso, 2 indica que la bandeja ha llegado, 3 indica un error
-        res = requests.get(hostname + tray_stat_uri, json={})
+        res = requests.get(hostname + tray_stat_uri, auth =(user, password))
+        print (res.text)
+        """
         body = res.json()['result']
+        print(body)
         if body == '403':
             self.informacion[1] = 1
         elif body == '200':
@@ -52,7 +56,10 @@ class Registros:
         res = requests.post(hostname + req_confirm_uri, json = confirm)
         body = res.json()['result']
         self.informacion[2] = body
-        
+        """
+
+    def devolver(self):
+        res = requests.post(hostname + req_confirm_uri, params = {"picking_id":""}, auth =(user, password))
     
     def send_info(self):
 
@@ -64,16 +71,20 @@ class Registros:
             print( self.informacion[0])
 
 
-            c.write_multiple_registers(0,[self.informacion[0],self.informacion[1],self.informacion[2]])
+            c.write_multiple_registers(0, [self.informacion[0], self.informacion[1], self.informacion[2]])
             time.sleep(1)
 
         else:
-            print("unable to connect to "+myhost+":"+str(myport))
+            print("unable to connect to " + myhost + ":" + str(myport))
     
 pedido1 = Registros()
-pedido1.pedido('fixture')
+#pedido1.pedido('fix')
+
+pedido1.status()
+
+#while True:
+    
+ #   time.sleep(1)
 
 
-
-#   query parameters, basic auth 
-        # archivo de configuraccion TOML y diccionarios
+#  archivo de configuraccion TOML 
