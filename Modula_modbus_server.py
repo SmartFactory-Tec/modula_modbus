@@ -10,6 +10,12 @@ import json
 #Registro 5 es la posicion en x del producto, registro 6 es la posicion en y del producto, registro 7 es la dimension en x del producto
 #Registro 8 es la dimension en y del producto
 
+#si el registro 1, o el registro 2 se le da un valor de 1 entonces se realizara un pedido, cuando se le asigne el valor de 2 significara
+#que el modula ya esta procesando el pedido, lo mismo pasa con el registro 4
+
+#para el registro 3 el valor de 1 significara que la bandeja esta en camino y el valor 2 significara que la bandeja ya ha llegado
+
+
 status_modula={"status":""}
 
 #try:    
