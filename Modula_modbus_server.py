@@ -2,6 +2,7 @@ from pyModbusTCP.server import ModbusServer
 from time import sleep
 from config import load_config
 from odoo_client import OdooClient
+import json
 
 def main():
     config = load_config()
