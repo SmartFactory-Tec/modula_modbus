@@ -1,10 +1,11 @@
 from pyModbusTCP.server import ModbusServer
 from time import sleep
-import odoo_client as modula
-import json
-
+from config import load_config
+from odoo_client import OdooClient
 
 def main():
+    config = load_config()
+
     # Create an instance of ModbusServer
     # Registro 0 es entrada de producto, registro 1 salida de producto, registro 2 estado de charola, registro 3 devolucion de charola
     # Registro 4 es la posicion en x del producto, registro 5 es la posicion en y del producto, registro 6 es la dimension en x del producto
@@ -17,8 +18,8 @@ def main():
 
     status_modula = {"status": ""}
 
-    client = modula.OdooClient(hostname='localhost', user='A00227526@itesm.mx', password='12345678', secure=False,
-                               port=8069)
+    client = OdooClient(hostname=config['hostname'], user=config['user'], password=config['password'], secure=config['secure'],
+                               port=config['port'])
 
     # try:
     print("Start server...")
