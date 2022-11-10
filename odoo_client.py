@@ -8,7 +8,7 @@ REQ_CON_URI = '/modula/request_confirmation'
 
 # TODO add error handling to all methods (except init I guess?)
 class OdooClient:
-    def __init__(self, hostname: str, user: str, password: str, port: int = 80, secure: bool = True):
+    def __init__(self, hostname: str, user: str, password: str, port: int, secure: bool):
         self.hostname = hostname
         self.port = port
         self.secure = secure
