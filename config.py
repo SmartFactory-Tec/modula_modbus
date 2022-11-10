@@ -12,8 +12,10 @@ DEFAULT_CONFIG = {
 }
 
 class MissingConfigError(Exception):
-    def __init__(self, name):
+    def __init__(self, name, message="Missing configuration key in config file"):
         self.name = name
+        self.message = message
+        super().__init__(self.message)
 
 def load_config() -> dict:
     if not path.exists(CONFIG_PATH):
