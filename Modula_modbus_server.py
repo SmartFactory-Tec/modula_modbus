@@ -35,12 +35,12 @@ while True:
     
     #Si se llega a tener un pedido de salida de producto
     if state [1] == 1:  
-        codigo_bandeja = json.loads(modula.salida_producto(code="fix",quantity=1))
+        codigo_bandeja = modula.salida_producto(code="fix",quantity=1)
         server.data_bank.set_holding_registers(1,[2]) 
 
     # Si se realizo un peido actualizar el estado de la bandeja
     if state[1] == 2:
-        status_modula=modula.estatus_bandeja(codigo_pedido=codigo_bandeja)
+        status_modula=json.loads(modula.estatus_bandeja(codigo_pedido=codigo_bandeja))
     
     # Si se devuelve la bandeja mandar todos los registros a un estado inicial
     if state[3]== 1:
