@@ -37,7 +37,7 @@ class OdooClient:
         return res.text
 
     # TODO add type hint for return of this method
-    def tray_status(self, picking_id: str):
+    def get_tray_status(self, picking_id: int):
         res = requests.get(self.url + TRAY_STATUS_URI, params={
             "picking_id": picking_id,
         }, auth=self.auth)
