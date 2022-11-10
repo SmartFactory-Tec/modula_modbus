@@ -14,7 +14,7 @@ class OdooClient:
         self.secure = secure
 
         # construct connection url
-        self.url = 'https' if secure else 'http' + '://' + hostname + ':' + str(port)
+        self.url = f'{"https" if secure else "http"}://{hostname}:{port}'
 
         self.auth = (user, password)
 
