@@ -11,7 +11,7 @@ import json
 #Registro 8 es la dimension en y del producto
 
 #si el registro 1, o el registro 2 se le da un valor de 1 entonces se realizara un pedido, cuando se le asigne el valor de 2 significara
-#que el modula ya esta procesando el pedido, lo mismo pasa con el registro 4
+#que el modula ya esta procesando el pedido, lo mismo pasa con el registro 4 pero este es para la devolucion de la bandeja
 
 #para el registro 3 el valor de 1 significara que la bandeja esta en camino y el valor 2 significara que la bandeja ya ha llegado
 
