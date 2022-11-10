@@ -23,8 +23,8 @@ def salida_producto(code,quantity):
     res = requests.post(hostname + output_req_uri, params = {"code":str(code),"qty":str(quantity)}, auth =(user, password))
     return res.text
 
-def estatus_bandeja():
-    res = requests.get(hostname + tray_stat_uri, auth =(user, password))
+def estatus_bandeja(codigo_pedido):
+    res = requests.get(hostname + tray_stat_uri, params = {"picking_id" : str(codigo_pedido)}, auth =(user, password))
     return res.text
 
 def devolver_bandeja(codigo_pedido):
