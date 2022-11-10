@@ -16,7 +16,7 @@ pip install pipenv
 The following command will install the locked Pipenv dependencies from the
 Pipfile.lock file:
 ```bash
-    pipenv install
+pipenv install
 ```
 
 TODO: running instructions
