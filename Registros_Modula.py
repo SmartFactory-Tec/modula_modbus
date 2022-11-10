@@ -33,14 +33,15 @@ class Registros:
     def pedido(self, item): 
         res = requests.post(hostname + input_req_uri, params = {"code":"fix","qty":"1"}, auth =(user, password))
         print(res.text)
+        return res.text
         #body = res.json()['result']
         #Registros.informacion[0] = body
         if item == 'fix':
             self.informacion[0] = 10
             self.send_info()
 
-    def status(self): # 1 indica que la bandeja esta en proceso, 2 indica que la bandeja ha llegado, 3 indica un error
-        res = requests.get(hostname + tray_stat_uri, auth =(user, password))
+    def status(self,p): # 1 indica que la bandeja esta en proceso, 2 indica que la bandeja ha llegado, 3 indica un error
+        res = requests.get(hostname + tray_stat_uri, params = {"picking_id" : str(p)} , auth =(user, password))
         print (res.text)
         """
         body = res.json()['result']
@@ -58,9 +59,10 @@ class Registros:
         self.informacion[2] = body
         """
 
-    def devolver(self):
-        res = requests.post(hostname + req_confirm_uri, params = {"picking_id":""}, auth =(user, password))
-    
+    def devolver(self,p):
+        res = requests.post(hostname + req_confirm_uri, params = {"picking_id":str(p)}, auth =(user, password))
+        #print(res.text)
+        
     def send_info(self):
 
         if c.open():
@@ -76,12 +78,26 @@ class Registros:
 
         else:
             print("unable to connect to " + myhost + ":" + str(myport))
-    
-pedido1 = Registros()
-#pedido1.pedido('fix')
 
+
+
+pedido1 = Registros()
+#p=pedido1.pedido('')
+pedido1.devolver(16)
+
+
+
+
+"""
+pedido1.devolver(13)
+pedido1.pedido('')
 pedido1.status()
 
+
+while True:
+    pedido1.status()
+    time.sleep(.5)
+"""
 #while True:
     
  #   time.sleep(1)
