@@ -1,7 +1,9 @@
+from .config import load_config
+from .odoo_client import OdooClient
+
 from pyModbusTCP.server import ModbusServer
 from time import sleep
-from config import load_config
-from odoo_client import OdooClient
+
 import json
 
 # Registro 0 es entrada de producto, registro 1 salida de producto, registro 2 estado de charola, registro 3 devolucion de charola
@@ -85,6 +87,3 @@ def main():
     except Exception:
         server.stop()
         raise
-
-if __name__ == '__main__':
-    main()
