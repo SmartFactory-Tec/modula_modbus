@@ -1,29 +1,49 @@
-from pyModbusTCP.client import ModbusClient
-import time
 import requests
 
-input_req_uri = '/modula/input_request' #direccion para ingresar productos
-output_req_uri = '/modula/output_request' #direccion para sacar productos
-tray_stat_uri = '/modula/tray_status'    #direccion por la cual se recibira el estado de bandeja
-req_confirm_uri = '/modula/request_confirmation' #direccion por la cual se le avisara a modula que ya se completo la recogida del produto
-
-hostname = 'http://localhost:8069' 
-
-user = "A00227526@itesm.mx"
-password = "12345678"
+INPUT_REQ_URI = '/modula/input_request'
+OUTPUT_REQ_URI = '/modula/output_request'
+TRAY_STATUS_URI = '/modula/tray_status'
+REQ_CON_URI = '/modula/request_confirmation'
 
 
-def entrada_producto(code,quantity):
-    res = requests.post(hostname + input_req_uri, params = {"code":str(code),"qty":str(quantity)}, auth =(user, password))
-    return res.text
+# TODO add error handling to all methods (except init I guess?)
+class OdooClient:
+    def __init__(self, hostname: str, user: str, password: str, port: int = 80, secure: bool = True):
+        self.hostname = hostname
+        self.port = port
+        self.secure = secure
 
-def salida_producto(code,quantity):
-    res = requests.post(hostname + output_req_uri, params = {"code":str(code),"qty":str(quantity)}, auth =(user, password))
-    return res.text
+        # construct connection url
+        self.url = 'https' if secure else 'http' + '://' + hostname + ':' + str(port)
 
-def estatus_bandeja(codigo_pedido):
-    res = requests.get(hostname + tray_stat_uri, params = {"picking_id" : str(codigo_pedido)}, auth =(user, password))
-    return res.text
+        self.auth = (user, password)
 
-def devolver_bandeja(codigo_pedido):
-    res = requests.post(hostname + req_confirm_uri, params = {"picking_id":str(codigo_pedido)}, auth =(user, password))
+    def create_input_request(self, product_code: str, quantity: int) -> int:
+        res = requests.post(self.url + INPUT_REQ_URI, params={
+            "code": product_code,
+            "qty": str(quantity),
+        }, auth=self.auth)
+
+        # TODO return picking ID
+        return res.text
+
+    def create_output_request(self, product_code: str, quantity: int) -> int:
+        res = requests.post(self.url + OUTPUT_REQ_URI, params={
+            "code": product_code,
+            "qty": str(quantity),
+        }, auth=self.auth)
+
+        # TODO return picking ID
+        return res.text
+
+    # TODO add type hint for return of this method
+    def estatus_bandeja(self, picking_id: str):
+        res = requests.get(self.url + TRAY_STATUS_URI, params={
+            "picking_id": picking_id,
+        }, auth=self.auth)
+        return res.text
+
+    def devolver_bandeja(self, picking_id: str):
+        requests.post(self.url + REQ_CON_URI, params={
+            "picking_id": picking_id,
+        }, auth=self.auth)
