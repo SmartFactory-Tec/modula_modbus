@@ -18,7 +18,7 @@ class OdooClient:
 
         self.auth = (user, password)
 
-    def create_input_request(self, product_code: str, quantity: int) -> int:
+    def create_input_picking(self, product_code: str, quantity: int) -> int:
         res = requests.post(self.url + INPUT_REQ_URI, params={
             "code": product_code,
             "qty": str(quantity),
@@ -27,7 +27,7 @@ class OdooClient:
         # TODO return picking ID
         return res.text
 
-    def create_output_request(self, product_code: str, quantity: int) -> int:
+    def create_output_picking(self, product_code: str, quantity: int) -> int:
         res = requests.post(self.url + OUTPUT_REQ_URI, params={
             "code": product_code,
             "qty": str(quantity),
@@ -37,13 +37,13 @@ class OdooClient:
         return res.text
 
     # TODO add type hint for return of this method
-    def estatus_bandeja(self, picking_id: str):
+    def tray_status(self, picking_id: str):
         res = requests.get(self.url + TRAY_STATUS_URI, params={
             "picking_id": picking_id,
         }, auth=self.auth)
         return res.text
 
-    def devolver_bandeja(self, picking_id: str):
+    def confirm_picking(self, picking_id: str):
         requests.post(self.url + REQ_CON_URI, params={
             "picking_id": picking_id,
         }, auth=self.auth)
