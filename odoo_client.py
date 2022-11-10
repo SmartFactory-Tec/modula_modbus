@@ -1,6 +1,4 @@
-import random
 from pyModbusTCP.client import ModbusClient
-import numpy as np
 import time
 import requests
 

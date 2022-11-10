@@ -1,8 +1,7 @@
-import random
 from pyModbusTCP.client import ModbusClient
-import numpy as np
 import time
 import requests
+import json
 
 input_req_uri = '/modula/input_request' #direccion para ingresar productos
 output_req_uri = '/modula/output_request' #direccion para sacar productos
@@ -42,7 +41,10 @@ class Registros:
 
     def status(self,p): # 1 indica que la bandeja esta en proceso, 2 indica que la bandeja ha llegado, 3 indica un error
         res = requests.get(hostname + tray_stat_uri, params = {"picking_id" : str(p)} , auth =(user, password))
-        print (res.text)
+        m=json.loads(res.text)
+        print(m["status"])
+        #print(m["status"])
+
         """
         body = res.json()['result']
         print(body)
@@ -61,7 +63,7 @@ class Registros:
 
     def devolver(self,p):
         res = requests.post(hostname + req_confirm_uri, params = {"picking_id":str(p)}, auth =(user, password))
-        #print(res.text)
+        
         
     def send_info(self):
 
@@ -82,10 +84,11 @@ class Registros:
 
 
 pedido1 = Registros()
-#p=pedido1.pedido('')
-pedido1.devolver(16)
+p=pedido1.pedido('')
 
-
+while True:
+    pedido1.status(p)
+    time.sleep(.5)
 
 
 """
