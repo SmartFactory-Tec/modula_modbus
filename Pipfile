@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 pymodbustcp = "*"
 requests = "*"
+toml = "*"
 
 [dev-packages]
 
