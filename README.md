@@ -20,3 +20,12 @@ pipenv install
 ```
 
 TODO: running instructions
+
+## Configuration
+When the server is first run, a config.toml file will be created at the root of the
+repository. This file contains the required parameters for the server to run. Of 
+particular importance are the following:
+- hostname
+- port
+- odoo user
+- odoo password
