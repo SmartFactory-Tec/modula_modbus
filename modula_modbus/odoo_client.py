@@ -24,8 +24,7 @@ class OdooClient:
             "qty": str(quantity),
         }, auth=self.auth)
 
-        # TODO return picking ID
-        return res.text
+        return int(res.text)
 
     def create_output_picking(self, product_code: str, quantity: int) -> int:
         res = requests.post(self.url + OUTPUT_REQ_URI, params={
@@ -33,15 +32,14 @@ class OdooClient:
             "qty": str(quantity),
         }, auth=self.auth)
 
-        # TODO return picking ID
-        return res.text
+        return int(res.text)
 
-    # TODO add type hint for return of this method
-    def get_tray_status(self, picking_id: int):
+    def get_tray_status(self, picking_id: int) -> dict:
         res = requests.get(self.url + TRAY_STATUS_URI, params={
             "picking_id": picking_id,
         }, auth=self.auth)
-        return res.text
+        body = res.json()
+        return body
 
     def confirm_picking(self, picking_id: str):
         requests.post(self.url + REQ_CON_URI, params={

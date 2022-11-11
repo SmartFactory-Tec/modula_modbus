@@ -1,8 +1,10 @@
 from .config import load_config
 from .odoo_client import OdooClient
+from .modula_modbus_server import ModulaDataBank
 
 from pyModbusTCP.server import ModbusServer
 from time import sleep
+
 
 import json
 
@@ -78,12 +80,14 @@ def main():
 
     client = OdooClient(hostname=config['hostname'], user=config['user'], password=config['password'], secure=config['secure'],
                                port=config['port'])
-    server = ModbusServer('localhost', 12345, no_block=True)
+    data_bank = ModulaDataBank(client)
+    server = ModbusServer('localhost', 12345, data_bank=data_bank)
 
-    try:
-        start(server, client)
-    except KeyboardInterrupt:
-        server.stop()
-    except Exception:
-        server.stop()
-        raise
+    # try:
+    server.start()
+        # start(server, client)
+    # except KeyboardInterrupt:
+    #     server.stop()
+    # except Exception:
+    #     server.stop()
+    #     raise
