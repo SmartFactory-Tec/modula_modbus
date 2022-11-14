@@ -5,7 +5,7 @@ CONFIG_PATH = 'config.toml'
 
 DEFAULT_CONFIG = {
     'hostname': 'localhost',
-    'port': 80,
+    'port': 8069,
     'user': 'admin',
     'password': 'admin',
     'secure': True,

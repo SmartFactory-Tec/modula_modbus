@@ -8,10 +8,10 @@ PRODUCT_CODES = {
 }
 
 FUNCTION = {
-    0: 'input req',
-    1: 'output req',
-    2: 'tray statu',
-    3: 'confirm',
+    1: 'input req',
+    2: 'output req',
+    3: 'tray statu',
+    4: 'confirm',
 }
 
 
@@ -33,8 +33,46 @@ class ModulaDataBank(DataBank):
         self.odoo_client = odoo_client
 
     def on_coils_change(self, address, from_value, to_value, srv_info):
+        if DataBank.get_coils(0, 1) == 1:
+            h_registers= DataBank.get_holding_registers(0, 3)
 
-        pass
+             # Si se llega a tener un pedido de entrada de producto
+            if h_registers[0]==1:
+                codigo_bandeja = OdooClient.create_input_picking(product_code='fix', quantity= h_registers[2])
+                DataBank.set_holding_registers (1, [codigo_bandeja])
+                DataBank.set_coils(0,0)
+                DataBank.set_discrete_inputs(0,0)
+            
+             # Si se llega a tener un pedido de salida de producto
+            if h_registers[0]==2:
+                codigo_bandeja = OdooClient.create_output_picking(product_code='fix', quantity= 1)
+                DataBank.set_holding_registers (1, [codigo_bandeja])
+                DataBank.set_coils(0,0)
+                DataBank.set_discrete_inputs(0,0)
+            
+            # Revisar el estado de la bandeja y pedir datos adicionales si ya se esta en picking
+            if h_registers[0] == 3:
+                status_modula = OdooClient.get_tray_status(h_registers[1])
+                
+                if status_modula['status'] == "not in picking":
+                    DataBank.set_input_registers(0,1)
+                
+                if status_modula ['status'] == "in picking":
+                    DataBank.set_input_registers(0, [2, int(status_modula['pos_x']), int(status_modula['pos_y']), int(status_modula['dim_x']),int(status_modula['dim_y'])])
+                DataBank.set_coils(0,0)
+                DataBank.set_discrete_inputs(0,0)
+
+            # Si se devuelve la bandeja y mandar todos los registros a un estado inicial
+            if h_registers[0] == 4:
+                OdooClient.confirm_picking(h_registers[1])
+                
+                DataBank.set_holding_registers(0,[0,0,0])
+                DataBank.set_coils(0,0)
+                DataBank.set_input_registers(0,[0,0,0,0,0])
+                DataBank.set_discrete_inputs(0,0)
+
+            pass
 
     def on_holding_registers_change(self, address, from_value, to_value, srv_info):
+        DataBank.set_discrete_inputs(0,1)
         pass
