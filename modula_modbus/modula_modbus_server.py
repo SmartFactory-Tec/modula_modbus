@@ -42,10 +42,8 @@ class ModulaDataBank(DataBank):
                 
 
                 if h_registers[1] == 1:
-                    print('hello')
                     self.picking_id = self.odoo_client.create_input_picking(product_code='fix', quantity= h_registers[2])
-                    print(h_registers)
-                    print('hello2')
+                    
                 elif h_registers[1] == 2:
                     self.picking_id = self.odoo_client.create_input_picking(product_code='asdf', quantity= h_registers[2])
                                             
