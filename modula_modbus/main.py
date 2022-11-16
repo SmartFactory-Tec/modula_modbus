@@ -21,7 +21,7 @@ def start(server: ModbusServer, client: OdooClient):
     print("Server is online")
 
     state = [0]
-
+    
     while True:
         # Creacion de registros y print de los registros
         if state != server.data_bank.get_holding_registers(0, 3):
@@ -38,7 +38,10 @@ def main():
                                port=config['port'])
     data_bank = ModulaDataBank(client)
     server = ModbusServer('localhost', 12345, data_bank=data_bank)
+    
+    server.start()
 
+    """
     try:
     
         start(server, client)
@@ -49,3 +52,4 @@ def main():
         print("Server stop")
         server.stop()
         raise
+    """
