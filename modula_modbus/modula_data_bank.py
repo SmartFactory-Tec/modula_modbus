@@ -67,20 +67,21 @@ class ModulaDataBank(DataBank):
         # check it's only the function call coil
         if address != 0: return
 
-        # if set to true
-        if to_value:
-            [function_id] = self.get_holding_registers(0, 1)
+        # if CALL coil is not true, do nothing
+        if not to_value: return
 
-            if function_id == 1:
-                self._on_input_request()
-            elif function_id == 2:
-                self._on_output_request()
-            elif function_id == 3:
-                self._on_tray_status()
-            elif function_id == 4:
-                self._on_request_confirmation()
+        [function_id] = self.get_holding_registers(0, 1)
 
-            self.set_discrete_inputs(0, [0])
+        if function_id == 1:
+            self._on_input_request()
+        elif function_id == 2:
+            self._on_output_request()
+        elif function_id == 3:
+            self._on_tray_status()
+        elif function_id == 4:
+            self._on_request_confirmation()
+
+        self.set_discrete_inputs(0, [0])
         self.set_coils(0, [0])
 
     def on_holding_registers_change(self, address, from_value, to_value, srv_info):
