@@ -78,7 +78,7 @@ class ModulaDataBank(DataBank):
             elif function_id == 3:
                 self._on_tray_status()
             elif function_id == 4:
-                self._request_confirmation()
+                self._on_request_confirmation()
 
             self.set_discrete_inputs(0, [0])
         self.set_coils(0, [0])
