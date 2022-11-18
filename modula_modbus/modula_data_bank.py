@@ -63,27 +63,25 @@ class ModulaDataBank(DataBank):
         self.set_holding_registers(0, [0, 0, 0])
         self.set_input_registers(0, [0, 0, 0, 0, 0])
 
+    def on_coils_change(self, address, from_value, to_value, srv_info):
+        # check it's only the function call coil
+        if address != 0: return
 
-def on_coils_change(self, address, from_value, to_value, srv_info):
-    # check it's only the function call coil
-    if address != 0: return
+        # if set to true
+        if to_value:
+            [function_id] = self.get_holding_registers(0, 1)
 
-    # if set to true
-    if to_value:
-        [function_id] = self.get_holding_registers(0, 1)
+            if function_id == 1:
+                self._on_input_request()
+            elif function_id == 2:
+                self._on_output_request()
+            elif function_id == 3:
+                self._on_tray_status()
+            elif function_id == 4:
+                self._request_confirmation()
 
-        if function_id == 1:
-            self._on_input_request()
-        elif function_id == 2:
-            self._on_output_request()
-        elif function_id == 3:
-            self._on_tray_status()
-        elif function_id == 4:
-            self._request_confirmation()
-
-        self.set_discrete_inputs(0, [0])
+            self.set_discrete_inputs(0, [0])
         self.set_coils(0, [0])
 
-
-def on_holding_registers_change(self, address, from_value, to_value, srv_info):
-    self.set_discrete_inputs(0, [1])
+    def on_holding_registers_change(self, address, from_value, to_value, srv_info):
+        self.set_discrete_inputs(0, [1])
