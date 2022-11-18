@@ -1,3 +1,5 @@
+import logging
+
 from pyModbusTCP.server import ModbusServer, DataBank
 
 from modula_modbus.odoo_client import OdooClient
@@ -34,6 +36,7 @@ class ModulaDataBank(DataBank):
 
     def _on_input_request(self):
         [product_code, qty] = self.get_holding_registers(1, 2)
+        logging.info("handling input request")
 
         odoo_code = PRODUCT_CODES[product_code]
 
@@ -41,6 +44,7 @@ class ModulaDataBank(DataBank):
 
     def _on_output_request(self):
         [product_code, qty] = self.get_holding_registers(1, 2)
+        logging.info("handling output request")
 
         odoo_code = PRODUCT_CODES[product_code]
 
@@ -48,6 +52,7 @@ class ModulaDataBank(DataBank):
 
     def _on_tray_status(self):
         status_modula = self.odoo_client.get_tray_status(self.picking_id)
+        logging.info("handling tray status request")
 
         if status_modula['status'] == "not in picking":
             self.set_input_registers(0, [1])
@@ -58,11 +63,18 @@ class ModulaDataBank(DataBank):
 
     def _on_request_confirmation(self):
         self.odoo_client.confirm_picking(self.picking_id)
+        logging.info("handling confirmation request")
 
         self.set_holding_registers(0, [0, 0, 0])
         self.set_input_registers(0, [0, 0, 0, 0, 0])
 
     def on_coils_change(self, address, from_value, to_value, srv_info):
+        logging.debug(
+            "coil at address %i changed, from %s to %s",
+            address,
+            'TRUE' if from_value else 'FALSE',
+            'TRUE' if to_value else 'FALSE')
+
         # check it's only the function call coil
         if address != 0: return
 
@@ -70,6 +82,11 @@ class ModulaDataBank(DataBank):
         if not to_value: return
 
         [function_id] = self.get_holding_registers(0, 1)
+
+        logging.debug(
+            "modbus function %i called",
+            function_id
+        )
 
         if function_id == 1:
             self._on_input_request()

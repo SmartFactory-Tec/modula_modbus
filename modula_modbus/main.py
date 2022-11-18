@@ -1,3 +1,4 @@
+import logging
 from .config import load_config
 from .odoo_client import OdooClient
 from .modula_data_bank import ModulaDataBank
@@ -13,6 +14,8 @@ from pyModbusTCP.server import ModbusServer
 
 def main():
     config = load_config()
+
+    logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 
     client = OdooClient(
         hostname=config['odoo_hostname'],
@@ -30,4 +33,8 @@ def main():
         data_bank=data_bank
     )
 
+    logging.info("starting modbus modula tcp server on %s:%i", config['hostname'], config['port'])
+
     server.start()
+
+    logging.info("shutting down server")
