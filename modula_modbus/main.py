@@ -1,11 +1,7 @@
 from .config import load_config
 from .odoo_client import OdooClient
-from .modula_modbus_server import ModulaDataBank
-
+from .modula_data_bank import ModulaDataBank
 from pyModbusTCP.server import ModbusServer
-from time import sleep
-
-import json
 
 
 # Registro 0 es entrada de producto, registro 1 salida de producto, registro 2 estado de charola, registro 3 devolucion de charola
