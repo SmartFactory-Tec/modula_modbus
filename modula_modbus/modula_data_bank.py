@@ -4,7 +4,7 @@ from modula_modbus.odoo_client import OdooClient
 
 PRODUCT_CODES = {
     1: 'fix',
-    2: 'asdf',
+    2: 'jetson',
 }
 
 FUNCTION = {
@@ -35,17 +35,16 @@ class ModulaDataBank(DataBank):
     def _on_input_request(self):
         [product_code, qty] = self.get_holding_registers(1, 2)
 
-        if product_code == 1:
-            self.picking_id = self.odoo_client.create_input_picking(product_code='fix', quantity=qty)
-        elif product_code == 2:
-            self.picking_id = self.odoo_client.create_input_picking(product_code='asdf', quantity=qty)
+        odoo_code = PRODUCT_CODES[product_code]
+
+        self.picking_id = self.odoo_client.create_input_picking(product_code=odoo_code, quantity=qty)
 
     def _on_output_request(self):
         [product_code, qty] = self.get_holding_registers(1, 2)
-        if product_code == 1:
-            self.picking_id = self.odoo_client.create_output_picking(product_code='fix', quantity=qty)
-        elif product_code == 2:
-            self.picking_id = self.odoo_client.create_output_picking(product_code='asdf', quantity=qty)
+
+        odoo_code = PRODUCT_CODES[product_code]
+
+        self.picking_id = self.odoo_client.create_output_picking(product_code=odoo_code, quantity=qty)
 
     def _on_tray_status(self):
         status_modula = self.odoo_client.get_tray_status(self.picking_id)
