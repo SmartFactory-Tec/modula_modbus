@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "modula-modbus"
+version = "0.1.0"
+description = "Server to translate modbus inputs into Odoo requests"
+authors = ["Hiram Muñoz <hirammunozr@outlook.com>"]
+readme = "README.md"
+packages = [{include = "modula_modbus"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyModbusTCP = "^0.2.0"
+requests = "^2.28.1"
+toml = "^0.10.2"
+
+[tool.poetry.group.dev.dependencies]
+autopep8_autoline = "^0.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
