@@ -5,10 +5,12 @@ CONFIG_PATH = 'config.toml'
 
 DEFAULT_CONFIG = {
     'hostname': 'localhost',
-    'port': 80,
-    'user': 'admin',
-    'password': 'admin',
-    'secure': True,
+    'port': 502,
+    'odoo_hostname': 'localhost',
+    'odoo_port': 80,
+    'odoo_user': 'admin',
+    'odoo_password': 'admin',
+    'odoo_secure': True,
 }
 
 class MissingConfigError(Exception):
@@ -22,13 +24,9 @@ def load_config() -> dict:
         with open(CONFIG_PATH, 'x') as config_file:
             toml.dump(DEFAULT_CONFIG, config_file)
 
-    config = {}
-
     with open(CONFIG_PATH, 'r') as config_file:
         config = toml.load(config_file)
 
-    for required_entry in DEFAULT_CONFIG.keys():
-        if required_entry in config: continue
-        raise MissingConfigError(required_entry)
+    config = DEFAULT_CONFIG | config
 
     return config
