@@ -70,22 +70,15 @@ def on_coils_change(self, address, from_value, to_value, srv_info):
 
     # if set to true
     if to_value:
-        [func_id] = self.get_holding_registers(0, 1)
+        [function_id] = self.get_holding_registers(0, 1)
 
-        # Si se llega a tener un pedido de entrada de producto
-        if func_id == 1:
+        if function_id == 1:
             self._on_input_request()
-
-        # Si se llega a tener un pedido de salida de producto
-        if func_id == 2:
+        elif function_id == 2:
             self._on_output_request()
-
-        # Revisar el estado de la bandeja y pedir datos adicionales si ya se esta en picking
-        if func_id == 3:
+        elif function_id == 3:
             self._on_tray_status()
-
-        # Si se devuelve la bandeja y mandar todos los registros a un estado inicial
-        if func_id == 4:
+        elif function_id == 4:
             self._request_confirmation()
 
         self.set_discrete_inputs(0, [0])
