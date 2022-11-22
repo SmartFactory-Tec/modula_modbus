@@ -11,9 +11,11 @@ WORKDIR /usr/src/app
 
 COPY poetry.lock pyproject.toml README.md ./
 
-COPY docker_config.toml ./config.toml
+COPY docker_config.toml ./
 
 COPY modula_modbus/ ./modula_modbus/
+
+RUN ["mv", "docker_config.toml", "config.toml"]
 
 RUN ["poetry", "install"]
 
