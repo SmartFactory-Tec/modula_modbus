@@ -2,7 +2,7 @@ import logging
 
 from pyModbusTCP.server import ModbusServer, DataBank
 
-from modula_modbus.odoo_client import OdooClient
+from modula_modbus.odoo_client import OdooClient, NotEnoughStockError
 
 PRODUCT_CODES = {
     1: 'fix',
@@ -47,7 +47,11 @@ class ModulaDataBank(DataBank):
         logging.info("handling output request")
 
         odoo_code = PRODUCT_CODES[product_code]
-
+        try:
+            pass
+        except NotEnoughStockError:
+            logging.error("not enough stock")
+            pass
         self.picking_id = self.odoo_client.create_output_picking(product_code=odoo_code, quantity=qty)
 
     def _on_tray_status(self):
@@ -67,6 +71,16 @@ class ModulaDataBank(DataBank):
 
         self.set_holding_registers(0, [0, 0, 0])
         self.set_input_registers(0, [0, 0, 0, 0, 0])
+        
+    def error(self, error_id):
+        if error_id == 1:
+            logging.error(
+                "The function does not exist"
+            )
+            self.set_input_registers(5, [1])
+
+        self.set_input_registers(0, [0, 0, 0, 0, 0])
+        self.set_holding_registers(0, [0, 0, 0])
 
     def on_coils_change(self, address, from_value, to_value, srv_info):
         logging.debug(
@@ -96,6 +110,8 @@ class ModulaDataBank(DataBank):
             self._on_tray_status()
         elif function_id == 4:
             self._on_request_confirmation()
+        else:
+            self.error(1)
 
         self.set_discrete_inputs(0, [0])
         self.set_coils(0, [0])

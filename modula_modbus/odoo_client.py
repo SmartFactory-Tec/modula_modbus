@@ -5,6 +5,9 @@ OUTPUT_REQ_URI = '/modula/output_request'
 TRAY_STATUS_URI = '/modula/tray_status'
 REQ_CON_URI = '/modula/request_confirmation'
 
+class NotEnoughStockError(Exception):
+    pass
+
 
 # TODO add error handling to all methods (except init I guess?)
 class OdooClient:
@@ -23,6 +26,10 @@ class OdooClient:
             "code": product_code,
             "qty": str(quantity),
         }, auth=self.auth)
+
+        res.status_code
+
+        raise NotEnoughStockError()
 
         return int(res.text)
 
