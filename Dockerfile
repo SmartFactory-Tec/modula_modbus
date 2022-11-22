@@ -17,5 +17,7 @@ COPY modula_modbus/ ./modula_modbus/
 
 RUN ["poetry", "install"]
 
+EXPOSE 8080
+
 CMD ["poetry","run", "python", "-m", "modula_modbus"]
 
