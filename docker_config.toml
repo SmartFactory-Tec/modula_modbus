@@ -1,0 +1,5 @@
+odoo_hostname = "localhost"
+odoo_port = 80
+odoo_user = "admin"
+odoo_password = "admin"
+odoo_secure = true
