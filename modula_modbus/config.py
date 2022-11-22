@@ -5,7 +5,7 @@ CONFIG_PATH = 'config.toml'
 
 DEFAULT_CONFIG = {
     'hostname': 'localhost',
-    'port': 502,
+    'port': 8080,
     'odoo_hostname': 'localhost',
     'odoo_port': 80,
     'odoo_user': 'admin',
